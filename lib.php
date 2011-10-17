@@ -137,7 +137,6 @@ function get_issues_from_specified_version_url($url)
 
     foreach ($nodes as $node) {
         if ($i && 0 == ($i % 20)) {
-            break;
             sleep(1);
         }
 
