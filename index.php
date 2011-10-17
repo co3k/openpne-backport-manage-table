@@ -51,12 +51,14 @@ $versions = detect_all_versions();
 $majors = array_reverse(get_supported_major_version_list($versions));
 
 $is_cached = true;
-if (apc_exists(sha1(__FILE__))) {
-    $issues = unserialize(apc_fetch(sha1(__FILE__)));
+$cache_data = apc_fetch(sha1(__FILE__));
+if ($cache_data) {
+    $issues = unserialize($cache_data);
 }
 
-if (apc_exists(sha1(__FILE__).'_ts')) {
-    $cached_time = date('Y-m-d H:i:s', apc_fetch(sha1(__FILE__).'_ts'));
+$cache_data = apc_fetch(sha1(__FILE__).'_ts');
+if ($cache_data) {
+    $cached_time = date('Y-m-d H:i:s', $cache_data);
 }
 
 if (empty($issues)) {
