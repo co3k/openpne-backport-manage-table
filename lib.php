@@ -52,6 +52,8 @@ class Issue
     {
         $this->detectBackportsFromRelation();
 
+        sleep(1);  // ... because backport detection needs many times API requests
+
         return count($this->backports);
     }
 
