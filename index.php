@@ -142,7 +142,7 @@ array_shift($backport_majors);
                 </thead>
                 <tbody>
                 <?php foreach ($issues as $issue): ?>
-                    <?php $issue->detectBackports(); ?>
+                    <?php if (!$is_cached) $issue->detectBackports(); ?>
                     <tr>
                         <td><?php echo h($issue->id) ?></td>
                         <td><?php echo h(exclude_translation($issue->tracker)) ?></td>
