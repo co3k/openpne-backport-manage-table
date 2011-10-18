@@ -35,6 +35,7 @@ define('REDMINE_PROJECT_ID', 'op3');
 
 define('SITE_NAME', 'OpenPNE 3 Backport Manage Table');
 
+/*
 if (isset($_GET['refresh'])) {
     apc_delete(sha1(__FILE__));
 
@@ -46,6 +47,7 @@ if (isset($_GET['refresh'])) {
     header('Location: '.$url);
     exit;
 }
+*/
 
 $versions = detect_all_versions();
 $majors = array_reverse(get_supported_major_version_list($versions));
@@ -95,7 +97,7 @@ array_shift($backport_majors);
     <header id="page_header">
         <h1><?php echo h(SITE_NAME) ?></h1>
         <?php if ($is_cached): ?>
-        <p>The followings are cached data. (Cached Time: <?php echo h($cached_time) ?>) <a href="?refresh">[refresh]</a></p>
+        <p>The followings are cached data. (Cached Time: <?php echo h($cached_time) ?>)<!-- <a href="?refresh">[refresh]</a>--></p>
         <?php endif; ?>
     </header>
     <section id="main_content">
