@@ -29,7 +29,7 @@ use Goutte\Client;
 
 class Issue
 {
-    public $id, $tracker, $subject, $version, $status, $priority;
+    public $id, $tracker, $subject, $version, $status, $priority, $uncertainty = 0;
 
     public $backports = array();
 
@@ -50,7 +50,30 @@ class Issue
 
     public function detectBackports()
     {
-        $this->detectBackportsFromRelation();
+        $candidates = $this->detectBackportsFromRelation();
+
+        foreach ($candidates as $major => $candidate) {
+            $trashes = array();
+
+            foreach ($candidate as $key => $issue) {
+                similar_text($this->subject, $issue->subject, $percent);
+                if (90 <= $percent) {
+                    $this->backports[$major] = $issue;
+
+                    break;
+                }
+
+                $trashes[$key] = $percent;
+            }
+
+            // detect from trashes
+            if (empty($this->backports[$major]) && $trashes) {
+                sort($trashes);
+                reset($trashes);
+                $this->backports[$major] = $candidate[key($trashes)];
+                $this->backports[$major]->uncertainty = (100 - current($trashes));
+            }
+        }
 
         sleep(1);  // ... because backport detection needs many times API requests
 
@@ -59,6 +82,8 @@ class Issue
 
     private function detectBackportsFromRelation()
     {
+        $results = array();
+
         $client = new Client();
         $crawler = $client->request('GET', REDMINE_BASE_URL.'issues/'.$this->id.'.xml?include=relations');
 
@@ -70,8 +95,10 @@ class Issue
                 continue;
             }
 
-            $this->backports[get_major_version_from_version_string($issue->version)] = $issue;
+            $results[get_major_version_from_version_string($issue->version)][] = $issue;
         }
+
+        return $results;
     }
 }
 

@@ -82,6 +82,14 @@ array_shift($backport_majors);
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="./jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="./lib.js"></script>
+    <style type="text/css">
+        .uncertain {
+            font-weight: bold;
+        }
+        .uncertain:after {
+            content: "[uncertain]";
+        }
+    </style>
 </head>
 <body>
     <header id="page_header">
@@ -153,7 +161,7 @@ array_shift($backport_majors);
                         <?php foreach ($backport_majors as $major): ?>
                         <td>
                             <?php if (isset($issue->backports[$major])): ?>
-                            <a href="<?php echo h(REDMINE_BASE_URL) ?>issues/<?php echo urlencode($issue->backports[$major]->id) ?>">
+                            <a href="<?php echo h(REDMINE_BASE_URL) ?>issues/<?php echo urlencode($issue->backports[$major]->id) ?>"<?php if ($issue->backports[$major]->uncertainty): ?> class="uncertain" data-uncertainty="<?php echo $issue->backports[$major]->uncertainty ?>"<?php endif; ?>>
                             <?php echo h(exclude_translation($issue->backports[$major]->status)) ?>
                             </a>
                             <?php else: ?>
