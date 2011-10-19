@@ -209,3 +209,19 @@ function exclude_translation($string)
 {
     return preg_replace('/（[^）]+）/u', '', $string);
 }
+
+function get_cache_path()
+{
+    return __DIR__.'/cache/backport';
+}
+
+function fetch_cache_data()
+{
+    return is_file(get_cache_path()) ? unserialize(file_get_contents(get_cache_path())) : false;
+}
+
+function save_cache_data($issues)
+{
+    file_put_contents(get_cache_path(), serialize($issues));
+    @chmod(get_cache_path(), 0777);
+}

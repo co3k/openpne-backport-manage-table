@@ -35,42 +35,17 @@ define('REDMINE_PROJECT_ID', 'op3');
 
 define('SITE_NAME', 'OpenPNE 3 Backport Manage Table');
 
-/*
-if (isset($_GET['refresh'])) {
-    apc_delete(sha1(__FILE__));
-
-    $scheme = 'http'; // FIXME
-    $host = $_SERVER['SERVER_NAME'];
-    $base = str_replace('?refresh', '', $_SERVER['REQUEST_URI']); // FIXME
-
-    $url = $scheme.'://'.$host.$base;
-    header('Location: '.$url);
-    exit;
-}
-*/
-
 $versions = detect_all_versions();
 $majors = array_reverse(get_supported_major_version_list($versions));
 
 $is_cached = true;
-$cache_data = apc_fetch(sha1(__FILE__));
-if ($cache_data) {
-    $issues = unserialize($cache_data);
-}
-
-$cache_data = apc_fetch(sha1(__FILE__).'_ts');
-if ($cache_data) {
-    $cached_time = date('Y-m-d H:i:s', $cache_data);
-}
-
-if (empty($issues)) {
+$issues = fetch_cache_data();
+if (!$issues) {
     $is_cached = false;
     $issues = get_issues_of_development_versions($versions);
 }
 
-if (empty($cached_time)) {
-    $cached_time = 'Unknown';
-}
+$cached_time = is_file(get_cache_path()) ? date('Y-m-d H:i:s', filemtime(get_cache_path())) : 'Unknown';
 
 $backport_majors = $majors;
 array_shift($backport_majors);
@@ -190,7 +165,6 @@ array_shift($backport_majors);
 </html>
 <?php
 if (!$is_cached) {
-    apc_store(sha1(__FILE__), serialize($issues));
-    apc_store(sha1(__FILE__).'_ts', time());
+    save_cache_data($issues);
 }
 ?>
