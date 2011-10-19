@@ -32,6 +32,7 @@ require_once 'lib.php';
 
 define('REDMINE_BASE_URL', 'http://redmine.openpne.jp/');
 define('REDMINE_PROJECT_ID', 'op3');
+define('DEBUG_OUTPUT', false);
 
 define('SITE_NAME', 'OpenPNE 3 Backport Manage Table');
 

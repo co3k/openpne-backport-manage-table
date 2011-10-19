@@ -166,6 +166,9 @@ function get_issues_from_specified_version_url($url)
 
     foreach ($nodes as $node) {
         if ($i && 0 == ($i % 20)) {
+            if (DEBUG_OUTPUT) {
+                echo sprintf('%d tickets are now fetched', $i).PHP_EOL;
+            }
             sleep(1);
         }
 
@@ -222,6 +225,6 @@ function fetch_cache_data()
 
 function save_cache_data($issues)
 {
-    file_put_contents(get_cache_path(), serialize($issues));
+    file_put_contents(get_cache_path(), serialize($issues), LOCK_EX);
     @chmod(get_cache_path(), 0777);
 }
