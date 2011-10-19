@@ -99,6 +99,7 @@ array_shift($backport_majors);
         <?php if ($is_cached): ?>
         <p>The followings are cached data. (Cached Time: <?php echo h($cached_time) ?>)<!-- <a href="?refresh">[refresh]</a>--></p>
         <?php endif; ?>
+        <p>This source code is available at <a href="https://github.com/ebihara/openpne-backport-manage-table">https://github.com/ebihara/openpne-backport-manage-table</a></p>
     </header>
     <section id="main_content">
         <table id="issues_filter">
